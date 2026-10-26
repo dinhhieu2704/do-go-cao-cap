@@ -214,7 +214,14 @@ async function loadMultiSheetDatabase() {
     const settingsRows = parseCSV(settingsRaw);
     STATE.settings = {};
     settingsRows.forEach(r => {
-      if (r.Key) STATE.settings[r.Key] = r.Value;
+      const rawK = r.Key || r.key || r.KEY || r['Khóa'] || r['Tham Số'];
+      const rawV = r.Value !== undefined ? r.Value : (r.value !== undefined ? r.value : (r['Giá Trị'] || r['Giá trị']));
+      if (rawK && typeof rawK === 'string') {
+        const cleanK = rawK.trim();
+        const cleanV = typeof rawV === 'string' ? rawV.trim() : (rawV || '');
+        STATE.settings[cleanK] = cleanV;
+        STATE.settings[cleanK.toLowerCase()] = cleanV;
+      }
     });
 
     // 2. PARSE CATEGORIES DYNAMICALLY
@@ -339,31 +346,112 @@ async function loadMultiSheetDatabase() {
 function applyDynamicSettings(settings) {
   if (!settings) return;
 
-  const phone = settings.phone || '0988888888';
-  const phoneDisplay = settings.phone_display || phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1.$2.$3');
-  const zaloUrl = settings.zalo_url && !settings.zalo_url.includes('[link removed]')
-    ? settings.zalo_url
-    : `https://zalo.me/${settings.zalo || phone}`;
-  const messengerUrl = settings.messenger_url && !settings.messenger_url.includes('[link removed]')
-    ? settings.messenger_url
-    : `https://m.me/${settings.messenger || 'mocgiatinhhoa'}`;
+  const getVal = (...keys) => {
+    for (const k of keys) {
+      if (settings[k] !== undefined && settings[k] !== null && String(settings[k]).trim() !== '') {
+        return String(settings[k]).trim();
+      }
+      const lower = k.toLowerCase();
+      if (settings[lower] !== undefined && settings[lower] !== null && String(settings[lower]).trim() !== '') {
+        return String(settings[lower]).trim();
+      }
+    }
+    return '';
+  };
 
-  // Link attributes
+  const phone = getVal('phone') || '0988888888';
+  const phoneDisplay = getVal('phone_display') || phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1.$2.$3');
+
+  const rawZalo = getVal('zalo_url', 'zalo');
+  let zaloUrl = '';
+  if (rawZalo && !rawZalo.includes('[link removed]')) {
+    zaloUrl = (rawZalo.startsWith('http://') || rawZalo.startsWith('https://')) ? rawZalo : `https://zalo.me/${rawZalo}`;
+  } else {
+    zaloUrl = `https://zalo.me/${getVal('zalo') || phone}`;
+  }
+
+  const rawMessenger = getVal('messenger_url', 'messenger');
+  let messengerUrl = '';
+  if (rawMessenger && !rawMessenger.includes('[link removed]')) {
+    messengerUrl = (rawMessenger.startsWith('http://') || rawMessenger.startsWith('https://')) ? rawMessenger : `https://m.me/${rawMessenger}`;
+  } else {
+    messengerUrl = `https://m.me/${getVal('messenger') || 'mocgiatinhhoa'}`;
+  }
+
+  const email = getVal('email') || 'concierge@mocgiatinhhoa.vn';
+  const brandName = getVal('brand_name') || 'MỘC GIA TINH HOA';
+  const brandTagline = getVal('brand_tagline') || 'Nội Thất Gỗ Mỹ Nghệ Cao Cấp Độc Bản';
+  const bannerUrl = getVal('banner_url', 'banner', 'hero_banner');
+  const workingHours = getVal('working_hours') || '08:00 - 21:00 (Tất cả các ngày trong tuần)';
+  const citesLicense = getVal('cites_license') || 'CITES-VN-2025';
+  const showroomHn = getVal('showroom_hn');
+  const showroomDn = getVal('showroom_dn');
+  const showroomHcm = getVal('showroom_hcm');
+  const workshop = getVal('workshop', 'address');
+
+  // 1. Link attributes
   document.querySelectorAll('[data-setting-href="phone"]').forEach(el => el.setAttribute('href', `tel:${phone}`));
   document.querySelectorAll('[data-setting-href="zalo"]').forEach(el => el.setAttribute('href', zaloUrl));
   document.querySelectorAll('[data-setting-href="messenger"]').forEach(el => el.setAttribute('href', messengerUrl));
+  document.querySelectorAll('[data-setting-href="email"]').forEach(el => el.setAttribute('href', `mailto:${email}`));
 
-  // Dynamic text mapping for any setting key
-  Object.keys(settings).forEach(key => {
-    document.querySelectorAll(`[data-setting-text="${key}"]`).forEach(el => {
-      el.textContent = settings[key];
-    });
+  // 2. Direct core key mappings
+  const coreMappings = {
+    phone,
+    phone_display: phoneDisplay,
+    email,
+    brand_name: brandName,
+    brand_tagline: brandTagline,
+    working_hours: workingHours,
+    cites_license: citesLicense,
+    showroom_hn: showroomHn,
+    showroom_dn: showroomDn,
+    showroom_hcm: showroomHcm,
+    workshop: workshop,
+    address: workshop
+  };
+
+  Object.entries(coreMappings).forEach(([k, v]) => {
+    if (v) {
+      document.querySelectorAll(`[data-setting-text="${k}"]`).forEach(el => {
+        el.textContent = v;
+      });
+    }
   });
 
-  if (settings.phone_display) {
-    document.querySelectorAll('[data-setting-text="phone_display"]').forEach(el => {
-      el.textContent = settings.phone_display;
+  // 3. Dynamic generic text mapping for any other custom setting key in the DB
+  Object.keys(settings).forEach(key => {
+    const val = settings[key];
+    if (val && typeof val === 'string') {
+      document.querySelectorAll(`[data-setting-text="${key}"]`).forEach(el => {
+        el.textContent = val;
+      });
+    }
+  });
+
+  // 4. Update banner background if configured in DB
+  if (bannerUrl && (bannerUrl.startsWith('http://') || bannerUrl.startsWith('https://'))) {
+    const heroBg = document.getElementById('hero-parallax-bg');
+    if (heroBg) {
+      heroBg.style.backgroundImage = `url('${bannerUrl}')`;
+    }
+    document.querySelectorAll('[data-setting-bg="banner_url"]').forEach(el => {
+      el.style.backgroundImage = `url('${bannerUrl}')`;
     });
+  }
+
+  // 5. Update browser page title dynamically
+  if (brandName) {
+    if (document.title.includes('—') || document.title.includes('-')) {
+      const parts = document.title.split(/[—-]/);
+      if (parts.length > 1) {
+        document.title = `${parts[0].trim()} — ${brandName}`;
+      } else {
+        document.title = `${brandName} — ${brandTagline}`;
+      }
+    } else {
+      document.title = `${brandName} — ${brandTagline}`;
+    }
   }
 }
 
