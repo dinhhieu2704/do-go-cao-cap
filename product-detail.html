@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Chi tiết tác phẩm kiệt tác đồ gỗ mỹ nghệ cao cấp độc bản tại Mộc Gia Tinh Hoa.">
+  <title>Chi Tiết Kiệt Tác — Mộc Gia Tinh Hoa</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  
+  <!-- PapaParse for safe CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+  <!-- TOP CONCIERGE BAR -->
+  <aside class="concierge-bar">
+    <div class="container concierge-inner">
+      <div class="concierge-item">
+        <span class="material-symbols-outlined">location_on</span>
+        <span>Hệ Thống Dinh Thự Trưng Bày: Hà Nội • Đà Nẵng • TP. Hồ Chí Minh</span>
+      </div>
+      <div class="concierge-item">
+        <span class="material-symbols-outlined">call</span>
+        <span>Hotline VIP Concierge: <strong class="concierge-highlight" data-setting-text="phone_display">0988.888.888</strong></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN NAVIGATION -->
+  <header class="main-header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo" aria-label="Trang chủ Mộc Gia Tinh Hoa">
+        <div class="logo-emblem">
+          <span class="material-symbols-outlined" style="font-size: 26px;">workspace_premium</span>
+        </div>
+        <div class="brand-text-col">
+          <span class="brand-name" data-setting-text="brand_name">MỘC GIA TINH HOA</span>
+          <span class="brand-tagline">Nội Thất Gỗ Mỹ Nghệ Cao Cấp</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Điều hướng">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Trang Chủ</a></li>
+          <li><a href="index.html#showcase" class="nav-link active">Bộ Sưu Tập</a></li>
+          <li><a href="index.html#craftsmanship" class="nav-link">Kỹ Thuật Mộng Gỗ</a></li>
+          <li><a href="index.html#showrooms" class="nav-link">Dinh Thự Trưng Bày</a></li>
+          <li><a href="#contact-footer" class="nav-link">Liên Hệ</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="tel:0988888888" class="header-hotline" data-setting-href="phone">
+          <span class="material-symbols-outlined">call</span>
+          <span data-setting-text="phone_display">0988.888.888</span>
+        </a>
+        <a href="index.html#showcase" class="btn-primary-consult">
+          <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
+          <span>Bộ Sưu Tập</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DETAIL VIEW -->
+  <main class="detail-main" id="product-detail-view">
+    <div class="container">
+      
+      <!-- BREADCRUMB -->
+      <nav class="breadcrumb-bar" aria-label="Đường dẫn trang">
+        <ol class="breadcrumb-list">
+          <li class="breadcrumb-item"><a href="index.html">Trang Chủ</a></li>
+          <li class="breadcrumb-separator">/</li>
+          <li class="breadcrumb-item"><a href="index.html#showcase" id="breadcrumb-category">Bộ Sưu Tập</a></li>
+          <li class="breadcrumb-separator">/</li>
+          <li class="breadcrumb-item breadcrumb-active" id="breadcrumb-product">Tác Phẩm</li>
+        </ol>
+      </nav>
+
+      <!-- MASTER SHOWCASE GRID: LEFT GALLERY, RIGHT SPECS & 3 SYNC CTAS -->
+      <section class="detail-showcase-grid">
+        
+        <!-- LEFT COLUMN: PRIMARY GALLERY (FOCUS ON LARGE IMAGE) -->
+        <div class="gallery-wrapper">
+          <div class="primary-image-frame" id="primary-image-frame">
+            <div class="gallery-badges">
+              <span class="badge-tag" id="product-badge">Chứng Nhận CITES Nguyên Khối</span>
+              <span class="badge-tag badge-secondary">Độc Bản 1-0-2</span>
+            </div>
+            
+            <div class="gallery-actions">
+              <button type="button" class="gallery-action-btn" title="Gợi ý di chuột để zoom cận cảnh">
+                <span class="material-symbols-outlined" style="font-size: 16px;">zoom_in</span>
+                <span>Di Chuột Phóng To</span>
+              </button>
+            </div>
+
+            <img id="main-gallery-img" src="" alt="Hình ảnh sản phẩm lớn độ phân giải cao" />
+          </div>
+
+          <!-- INTERACTIVE THUMBNAIL STRIP -->
+          <div class="thumbnail-strip" id="thumbnail-strip">
+            <!-- Dynamically injected via detail.js -->
+          </div>
+
+          <!-- GUARANTEE BOX -->
+          <div class="guarantee-box">
+            <div class="guarantee-left">
+              <span class="material-symbols-outlined">verified</span>
+              <div>
+                <p class="guarantee-title">Cam Kết Nguyên Bản 100%</p>
+                <p class="guarantee-desc">Không chắp ghép - Không vẽ vân - Độ ẩm sấy kỹ lưỡng dưới 12% tiêu chuẩn quốc tế</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: PRODUCT DETAILS & SYNCHRONIZED 3 CTA SUITE -->
+        <div class="detail-info-col">
+          
+          <div class="detail-tags">
+            <span class="badge-tag" style="background-color: var(--color-surface-container); color: var(--color-primary); border-color: var(--color-border);" id="product-wood-tag">Gỗ Quý Tuyển Chọn</span>
+            <span class="badge-tag" style="background-color: var(--color-primary); color: var(--color-secondary-light);">Nghệ Nhân 30 Năm Tay Nghề</span>
+          </div>
+
+          <h1 class="detail-title" id="product-title">Đang Tải Tác Phẩm...</h1>
+
+          <div class="detail-meta-row">
+            <span>Mã định danh: <span class="sku-tag" id="product-sku">MG-000</span></span>
+            <span class="status-pill">Hoàn thiện sẵn tại Showroom</span>
+          </div>
+
+          <!-- PRICE BOX -->
+          <div class="price-box">
+            <span class="price-box-label">Mức Đầu Tư Giá Trị Di Sản</span>
+            <div class="price-box-val" id="product-price-val">Đang cập nhật</div>
+            <p class="price-box-note">Báo giá chi tiết kèm phương án vận chuyển và thiết lập không gian dinh thự theo phong thủy.</p>
+          </div>
+
+          <!-- BENTO SPECS CARDS -->
+          <div class="specs-bento-grid">
+            <div class="bento-card">
+              <div class="bento-header">
+                <span class="material-symbols-outlined">straighten</span>
+                <span>Kích Thước Mặt Bàn</span>
+              </div>
+              <p class="bento-val" id="spec-dimensions">Theo quy cách</p>
+              <span class="bento-sub">Nguyên khối không chắp ghép</span>
+            </div>
+
+            <div class="bento-card">
+              <div class="bento-header">
+                <span class="material-symbols-outlined">scale</span>
+                <span>Khối Lượng Tịnh</span>
+              </div>
+              <p class="bento-val" id="spec-weight">Đanh chắc</p>
+              <span class="bento-sub">Vân núi chìm nổi tự nhiên</span>
+            </div>
+
+            <div class="bento-card">
+              <div class="bento-header">
+                <span class="material-symbols-outlined">carpenter</span>
+                <span>Kết Cấu Mộng</span>
+              </div>
+              <p class="bento-val">100% Mộng Thắt Cổ</p>
+              <span class="bento-sub">Triệt tiêu hoàn toàn kim loại</span>
+            </div>
+
+            <div class="bento-card">
+              <div class="bento-header">
+                <span class="material-symbols-outlined">eco</span>
+                <span>Lớp Hoàn Thiện</span>
+              </div>
+              <p class="bento-val" id="spec-finish">Dầu Lau Hữu Cơ</p>
+              <span class="bento-sub">Sáp ong dưỡng ẩm vĩnh cửu</span>
+            </div>
+          </div>
+
+          <!-- =============================================================== -->
+          <!-- BỘ 3 NÚT CTA LIÊN HỆ ĐỒNG BỘ NỔI BẬT ĐẶC BIỆT                   -->
+          <!-- =============================================================== -->
+          <div class="cta-suite-container">
+            <div class="cta-suite-header">
+              <div class="cta-suite-title">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+                <span>KÊNH ĐẶC QUYỀN VIP CONCIERGE</span>
+              </div>
+              <span class="cta-response-badge">PHẢN HỒI DƯỚI 5 PHÚT</span>
+            </div>
+
+            <!-- CTA 1: GỌI ĐIỆN THOẠI NGAY -->
+            <a href="tel:0988888888" class="cta-btn-phone pulse-glow" data-setting-href="phone">
+              <div class="cta-icon-box">
+                <span class="material-symbols-outlined">call</span>
+              </div>
+              <div class="cta-text-group">
+                <span class="cta-sub-tag">Ưu tiên tư vấn lãnh đạo</span>
+                <span class="cta-main-text">GỌI ĐIỆN THOẠI NGAY</span>
+              </div>
+              <div class="cta-value-display">
+                <span class="cta-number" data-setting-text="phone_display">0988.888.888</span>
+                <span class="cta-status-hint">Hotline 24/7 VIP</span>
+              </div>
+            </a>
+
+            <!-- CTA 2: CHÁT ZALO BÁO GIÁ & XEM VIDEO THỰC TẾ -->
+            <a href="https://zalo.me/0988888888" target="_blank" rel="noopener noreferrer" class="cta-btn-zalo" data-setting-href="zalo">
+              <div class="zalo-badge">ZALO</div>
+              <div class="cta-text-group">
+                <span class="cta-sub-tag">Xem video thực tế 4K & vân gỗ</span>
+                <span class="cta-main-text">CHÁT ZALO BÁO GIÁ NGAY</span>
+              </div>
+              <span class="material-symbols-outlined" style="font-size: 20px; color: var(--color-zalo);">arrow_forward</span>
+            </a>
+
+            <!-- CTA 3: GỬI TIN NHẮN MESSENGER -->
+            <a href="https://m.me/mocgiatinhhoa" target="_blank" rel="noopener noreferrer" class="cta-btn-messenger" data-setting-href="messenger">
+              <div class="messenger-badge">
+                <span class="material-symbols-outlined">forum</span>
+              </div>
+              <div class="cta-text-group">
+                <span class="cta-sub-tag">Tư vấn kiến trúc sư & bản vẽ 3D</span>
+                <span class="cta-main-text">GỬI TIN NHẮN MESSENGER</span>
+              </div>
+              <span class="material-symbols-outlined" style="font-size: 20px; color: var(--color-secondary);">send</span>
+            </a>
+
+            <p class="cta-note">
+              * Quý gia chủ có thể gửi mặt bằng hoặc kích thước phòng thực tế để nhận phối cảnh 3D miễn phí trước khi quyết định.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- DETAILED TABS SECTION: STORY, SPECS, WARRANTY -->
+      <section class="details-tab-section">
+        <div class="tab-navigation">
+          <button type="button" class="tab-nav-btn active" data-tab-target="tab-story">
+            1. Câu Chuyện Tác Phẩm & Nguồn Gỗ CITES
+          </button>
+          <button type="button" class="tab-nav-btn" data-tab-target="tab-specs">
+            2. Thông Số Kỹ Thuật Đầy Đủ
+          </button>
+          <button type="button" class="tab-nav-btn" data-tab-target="tab-warranty">
+            3. Chính Sách Bảo Hành Đời Người & Giao Hàng
+          </button>
+        </div>
+
+        <!-- TAB 1: STORY -->
+        <div class="tab-pane active" id="tab-story">
+          <div class="tab-story-grid">
+            <div>
+              <span class="story-tag">Hành Trình Di Sản Của Đại Thụ Trăm Năm</span>
+              <h3 class="story-title">Sự Kết Tinh Kỳ Diệu Của Đất Trời & Bàn Tay Nghệ Nhân</h3>
+              <p class="story-body" id="tab-story-text">
+                Khối gỗ đại thụ quý hiếm được tuyển chọn nghiêm ngặt từ cánh rừng nguyên sinh. Chỉ những thân cây có tuổi đời trên 100 năm mới kết tinh được chất gỗ đanh như thép cùng dải vân hổ phách lượn sóng cuồn cuộn. Từng thớ gỗ mang đầy đủ giấy tờ chứng nhận minh bạch quốc tế CITES.
+              </p>
+              <div style="padding: 1.25rem; background-color: var(--color-surface-container); border-left: 3px solid var(--color-secondary);">
+                <strong>Hồ sơ pháp lý:</strong>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;" id="tab-story-cites">
+                  Khai thác hợp pháp theo chứng chỉ CITES quốc tế, phơi sấy 180 ngày tiêu chuẩn châu Âu giữ trọn vẹn thớ gỗ tự nhiên.
+                </p>
+              </div>
+            </div>
+
+            <div class="story-img-frame">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXLyejk4tIQEaitgoRjBmrctgx6XduUoXVxZhlSyrghQ_R2jG7-FpLfsTmOjpFlkDnW2hkqri6Uex0MIjkEw_F5pzhR9gpGw-EJ1jsNFMF5MQkUJF-g592YsRxFZY7-Wj9roy5ANpes-g2P8-2IwNSyGxEdpP0W-nxpCKUhTGajsF0Y2VemptBXUVvD6ZduzUNvQC_-k843zbEF9paSPE_n57WrCgSp0WasV2mk_Qvl2ioQ8Z5krpSbR6R_2Ff6tlxwEX0zgd7AA" alt="Nghệ nhân Mộc Gia đục chạm tác phẩm thủ công" />
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: SPECS -->
+        <div class="tab-pane" id="tab-specs">
+          <h3 class="story-title" style="margin-bottom: 1.5rem;">Bảng Hồ Sơ Kỹ Thuật Chi Tiết</h3>
+          <table class="specs-table">
+            <tbody id="specs-table-body">
+              <!-- Dynamically populated via detail.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TAB 3: WARRANTY -->
+        <div class="tab-pane" id="tab-warranty">
+          <h3 class="story-title" style="margin-bottom: 1.5rem;">Chính Sách Bảo Hành & Dịch Vụ Hậu Mãi Hoàng Gia</h3>
+          <div class="warranty-grid">
+            <div class="warranty-card">
+              <span class="material-symbols-outlined">security</span>
+              <h4>Bảo Hành 10 Năm</h4>
+              <p>Cam kết 1 đổi 1 hoặc xử lý triệt để nếu xảy ra mối mọt, cong vênh do lỗi phơi sấy. Đội ngũ kỹ thuật viên có mặt trong vòng 24 giờ trên toàn quốc.</p>
+            </div>
+            <div class="warranty-card">
+              <span class="material-symbols-outlined">published_with_changes</span>
+              <h4>Bảo Dưỡng Miễn Phí Trọn Đời</h4>
+              <p>Định kỳ 6 tháng một lần, chuyên viên nghệ nhân sẽ đến tận tư gia lau dầu dưỡng gỗ thảo mộc tự nhiên, duy trì độ bóng lụa satin vĩnh cửu.</p>
+            </div>
+            <div class="warranty-card">
+              <span class="material-symbols-outlined">local_shipping</span>
+              <h4>Vận Chuyển Chuyên Dụng VIP</h4>
+              <p>Xe nâng hạ chuyên dụng vận chuyển an toàn tuyệt đối tới tận phòng tiệc/phòng khách biệt thự của quý gia chủ, hỗ trợ lắp đặt trọn gói.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RELATED PRODUCTS -->
+      <section style="margin-bottom: 3rem;">
+        <header class="section-header">
+          <span class="section-tag">Đồng Điệu Phong Cách</span>
+          <h2 class="section-title">Kiệt Tác Cùng Không Gian</h2>
+        </header>
+
+        <div class="product-grid" id="related-products-grid">
+          <!-- Dynamically populated via detail.js -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- MAIN FOOTER -->
+  <footer class="main-footer" id="contact-footer">
+    <div class="container footer-top">
+      <div class="footer-grid">
+        <div>
+          <div class="brand-logo" style="margin-bottom: 1rem;">
+            <div class="logo-emblem" style="background-color: var(--color-primary-dark); border-color: var(--color-secondary);">
+              <span class="material-symbols-outlined" style="color: var(--color-secondary-light);">workspace_premium</span>
+            </div>
+            <div class="brand-text-col">
+              <span class="brand-name" style="color: #fff;" data-setting-text="brand_name">MỘC GIA TINH HOA</span>
+              <span class="brand-tagline">Nội Thất Gỗ Mỹ Nghệ Cao Cấp</span>
+            </div>
+          </div>
+          <p class="footer-desc">
+            Không gian trưng bày kiệt tác đồ gỗ cao cấp. Tinh hoa kết tinh từ bàn tay nghệ nhân bậc thầy và khối gỗ quý trăm năm.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Kiệt Tác Gỗ</h4>
+          <ul class="footer-links">
+            <li><a href="index.html#showcase" class="footer-link">Bàn Ăn Nguyên Khối</a></li>
+            <li><a href="index.html#showcase" class="footer-link">Salon Hoàng Gia Nghê Đỉnh</a></li>
+            <li><a href="index.html#showcase" class="footer-link">Phòng Ngủ Hương Đá Louis</a></li>
+            <li><a href="index.html#showcase" class="footer-link">Sập Thờ Mai Điểu Tam Cấp</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Đặc Quyền</h4>
+          <ul class="footer-links">
+            <li><a href="index.html#craftsmanship" class="footer-link">Kỹ Thuật Mộng Âm Dương</a></li>
+            <li><a href="index.html#craftsmanship" class="footer-link">Chứng Thư CITES Quốc Tế</a></li>
+            <li><a href="index.html#showrooms" class="footer-link">Bảo Dưỡng Định Kỳ Trọn Đời</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Liên Hệ Trực Tiếp</h4>
+          <div class="footer-contact-item">
+            <span class="material-symbols-outlined">call</span>
+            <span>Hotline VIP: <a href="tel:0988888888" style="color: var(--color-secondary-light); font-weight: 700;" data-setting-href="phone" data-setting-text="phone_display">0988.888.888</a></span>
+          </div>
+          <div class="footer-contact-item">
+            <span class="material-symbols-outlined">mail</span>
+            <span>concierge@mocgiatinhhoa.vn</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+            <a href="https://zalo.me/0988888888" target="_blank" rel="noopener noreferrer" class="btn-card-detail" data-setting-href="zalo" style="padding: 0.5rem 0.75rem; color: #fff; border-color: var(--color-secondary);">
+              Zalo Báo Giá
+            </a>
+            <a href="https://m.me/mocgiatinhhoa" target="_blank" rel="noopener noreferrer" class="btn-card-detail" data-setting-href="messenger" style="padding: 0.5rem 0.75rem; color: #fff; border-color: var(--color-secondary);">
+              Messenger
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <div>
+        © 2025 Mộc Gia Tinh Hoa. Giữ toàn bộ quyền sở hữu trí tuệ và bản quyền thiết kế tác phẩm.
+      </div>
+      <div>
+        Chứng chỉ nguồn gốc gỗ: CITES-VN-2025
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING QUICK CONTACT HUB -->
+  <div class="floating-contact-hub">
+    <a href="tel:0988888888" class="floating-btn floating-phone pulse-glow" data-setting-href="phone" aria-label="Gọi điện thoại ngay">
+      <span class="material-symbols-outlined">call</span>
+      <span class="floating-tooltip">Gọi Hotline: <span data-setting-text="phone_display">0988.888.888</span></span>
+    </a>
+    <a href="https://zalo.me/0988888888" target="_blank" rel="noopener noreferrer" class="floating-btn floating-zalo" data-setting-href="zalo" aria-label="Chát Zalo nhận báo giá">
+      <span>Zalo</span>
+      <span class="floating-tooltip">Chát Zalo Nhận Báo Giá & Video 4K</span>
+    </a>
+    <a href="https://m.me/mocgiatinhhoa" target="_blank" rel="noopener noreferrer" class="floating-btn floating-messenger" data-setting-href="messenger" aria-label="Nhắn tin Messenger">
+      <span class="material-symbols-outlined">chat</span>
+      <span class="floating-tooltip">Tư Vấn Facebook Messenger</span>
+    </a>
+  </div>
+
+  <!-- Detail Controller -->
+  <script src="js/detail.js"></script>
+</body>
+</html>

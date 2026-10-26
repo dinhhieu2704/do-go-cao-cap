@@ -1,0 +1,128 @@
+/* ==========================================================================
+   ANIMATIONS & 3D INTERACTION STYLES
+   ========================================================================== */
+
+/* 3D TILT & HOVER DEPTH */
+.card-tilt-hover {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+.card-tilt-hover:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 24px 48px -12px rgba(26, 15, 10, 0.25), 0 0 0 1px rgba(197, 160, 89, 0.4);
+}
+
+/* SMOOTH ZOOM */
+.zoom-trigger {
+  overflow: hidden;
+}
+.zoom-target {
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.zoom-trigger:hover .zoom-target {
+  transform: scale(1.08);
+}
+
+/* PULSE RIPPLE FOR VIP PHONE CTA */
+@keyframes ring-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(197, 160, 89, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0);
+  }
+}
+.pulse-glow {
+  animation: ring-glow 2.2s infinite;
+}
+
+/* GOLD SHIMMER */
+@keyframes gold-shine {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.gold-shimmer-text {
+  background: linear-gradient(90deg, #c5a059 0%, #ffeec9 50%, #c5a059 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shine 4s linear infinite;
+}
+
+/* PARALLAX SUBTLE FLOAT */
+@keyframes subtle-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.floating-element {
+  animation: subtle-float 5s ease-in-out infinite;
+}
+
+/* MODAL QUICK VIEW */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(26, 15, 10, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-window {
+  width: 100%;
+  max-width: 900px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-secondary);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.modal-overlay.open .modal-window {
+  transform: scale(1) translateY(0);
+}
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  background-color: var(--color-primary-dark);
+  color: var(--color-secondary-light);
+  border: 1px solid var(--color-border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+.modal-close-btn:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-primary-dark);
+}
