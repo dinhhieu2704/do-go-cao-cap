@@ -89,7 +89,7 @@
         
         <!-- LEFT COLUMN: PRIMARY GALLERY (FOCUS ON LARGE IMAGE) -->
         <div class="gallery-wrapper">
-          <div class="primary-image-frame" id="primary-image-frame">
+          <div class="primary-image-frame is-loading" id="primary-image-frame">
             <div class="gallery-badges">
               <span class="badge-tag" id="product-badge">Chứng Nhận CITES Nguyên Khối</span>
               <span class="badge-tag badge-secondary">Độc Bản 1-0-2</span>
@@ -102,7 +102,7 @@
               </button>
             </div>
 
-            <img id="main-gallery-img" src="" alt="Hình ảnh sản phẩm lớn độ phân giải cao" />
+            <img id="main-gallery-img" src="images/default-woodcraft.svg" alt="Hình ảnh sản phẩm lớn độ phân giải cao" onload="this.classList.add('is-loaded'); this.closest('.is-loading')?.classList.remove('is-loading');" onerror="this.onerror=null; this.src='images/default-woodcraft.svg'; this.classList.add('is-loaded', 'is-fallback'); this.closest('.is-loading')?.classList.remove('is-loading');" />
           </div>
 
           <!-- INTERACTIVE THUMBNAIL STRIP -->
@@ -271,8 +271,8 @@
               </div>
             </div>
 
-            <div class="story-img-frame">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXLyejk4tIQEaitgoRjBmrctgx6XduUoXVxZhlSyrghQ_R2jG7-FpLfsTmOjpFlkDnW2hkqri6Uex0MIjkEw_F5pzhR9gpGw-EJ1jsNFMF5MQkUJF-g592YsRxFZY7-Wj9roy5ANpes-g2P8-2IwNSyGxEdpP0W-nxpCKUhTGajsF0Y2VemptBXUVvD6ZduzUNvQC_-k843zbEF9paSPE_n57WrCgSp0WasV2mk_Qvl2ioQ8Z5krpSbR6R_2Ff6tlxwEX0zgd7AA" alt="Nghệ nhân Mộc Gia đục chạm tác phẩm thủ công" />
+            <div class="story-img-frame is-loading" style="position: relative; overflow: hidden; background-color: #24140d;">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXLyejk4tIQEaitgoRjBmrctgx6XduUoXVxZhlSyrghQ_R2jG7-FpLfsTmOjpFlkDnW2hkqri6Uex0MIjkEw_F5pzhR9gpGw-EJ1jsNFMF5MQkUJF-g592YsRxFZY7-Wj9roy5ANpes-g2P8-2IwNSyGxEdpP0W-nxpCKUhTGajsF0Y2VemptBXUVvD6ZduzUNvQC_-k843zbEF9paSPE_n57WrCgSp0WasV2mk_Qvl2ioQ8Z5krpSbR6R_2Ff6tlxwEX0zgd7AA" alt="Nghệ nhân Mộc Gia đục chạm tác phẩm thủ công" onload="this.classList.add('is-loaded'); this.closest('.is-loading')?.classList.remove('is-loading');" onerror="this.onerror=null; this.src='images/default-woodcraft.svg'; this.classList.add('is-loaded', 'is-fallback'); this.closest('.is-loading')?.classList.remove('is-loading');" />
             </div>
           </div>
         </div>

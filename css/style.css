@@ -793,18 +793,134 @@ button {
   box-shadow: var(--shadow-3d);
   border-color: var(--color-border-gold);
 }
+/* ==========================================================================
+   IMAGE LOADING SHIMMER & FALLBACK PROTECTION SYSTEM
+   ========================================================================== */
+.product-card-media,
+.primary-image-frame,
+.thumb-img-wrap,
+.quickview-media,
+.craft-media,
+.img-loading-box {
+  position: relative;
+  overflow: hidden;
+  background-color: #24140d;
+}
+
+/* Luxury Warm Walnut Shimmer while image is loading */
+.product-card-media.is-loading,
+.primary-image-frame.is-loading,
+.thumb-img-wrap.is-loading,
+.quickview-media.is-loading,
+.craft-media.is-loading,
+.img-loading-box.is-loading {
+  background: linear-gradient(
+    110deg,
+    #24140d 0%,
+    #382116 25%,
+    #4a2c1d 50%,
+    #382116 75%,
+    #24140d 100%
+  );
+  background-size: 200% 100%;
+  animation: imgShimmer 1.8s ease-in-out infinite;
+}
+
+/* Elegant Center Gold Spinner */
+.product-card-media.is-loading::before,
+.primary-image-frame.is-loading::before,
+.quickview-media.is-loading::before,
+.craft-media.is-loading::before,
+.img-loading-box.is-loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 42px;
+  height: 42px;
+  margin-top: -21px;
+  margin-left: -21px;
+  border: 3px solid rgba(197, 160, 89, 0.2);
+  border-top-color: #dfc282;
+  border-right-color: #c5a059;
+  border-radius: 50%;
+  z-index: 4;
+  animation: imgSpinner 0.8s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+  box-shadow: 0 0 16px rgba(197, 160, 89, 0.35);
+  pointer-events: none;
+}
+
+/* Smaller Spinner for Thumbnails */
+.thumb-img-wrap.is-loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  margin-left: -11px;
+  border: 2px solid rgba(197, 160, 89, 0.2);
+  border-top-color: #dfc282;
+  border-radius: 50%;
+  z-index: 4;
+  animation: imgSpinner 0.8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes imgShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes imgSpinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Smooth Image Fade-in */
+.product-card-img,
+.primary-image-frame img,
+.thumb-img-wrap img,
+.quickview-media img,
+.craft-media img {
+  opacity: 0;
+  transition: opacity 0.4s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.product-card-img.is-loaded,
+.primary-image-frame img.is-loaded,
+.thumb-img-wrap img.is-loaded,
+.quickview-media img.is-loaded,
+.craft-media img.is-loaded {
+  opacity: 1;
+}
+
+/* Default / Fallback Image Styling */
+img.is-fallback {
+  object-fit: cover !important;
+  background-color: #24140d;
+}
+
 .product-card-media {
   position: relative;
   aspect-ratio: 16 / 11;
   overflow: hidden;
-  background-color: var(--color-surface-container);
   border-bottom: 1px solid var(--color-border);
 }
 .product-card-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .product-card:hover .product-card-img {
   transform: scale(1.08);

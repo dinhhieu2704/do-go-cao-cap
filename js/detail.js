@@ -339,6 +339,8 @@ function setupGallery(product) {
   const mainFrame = document.getElementById('primary-image-frame');
   if (!mainImg || !thumbStrip) return;
 
+  const defaultImg = 'images/default-woodcraft.svg';
+
   const images = [
     { url: product.Image_Main, label: 'Toàn Cảnh' },
     { url: product.Thumb1 || product.Image_Main, label: 'Vân Gỗ 3D' },
@@ -346,8 +348,27 @@ function setupGallery(product) {
     { url: product.Thumb3 || product.Image_Main, label: 'Chi Tiết Hoàn Thiện' }
   ];
 
+  if (mainFrame) mainFrame.classList.add('is-loading');
+  mainImg.classList.remove('is-loaded');
+
+  mainImg.onload = () => {
+    mainImg.classList.add('is-loaded');
+    if (mainFrame) mainFrame.classList.remove('is-loading');
+  };
+  mainImg.onerror = () => {
+    mainImg.onerror = null;
+    mainImg.src = defaultImg;
+    mainImg.classList.add('is-loaded', 'is-fallback');
+    if (mainFrame) mainFrame.classList.remove('is-loading');
+  };
+
   mainImg.src = images[0].url;
   mainImg.alt = product.Name;
+
+  if (mainImg.complete && mainImg.naturalWidth > 0) {
+    mainImg.classList.add('is-loaded');
+    if (mainFrame) mainFrame.classList.remove('is-loading');
+  }
 
   const fragment = document.createDocumentFragment();
 
@@ -358,8 +379,12 @@ function setupGallery(product) {
     thumbBtn.setAttribute('data-index', idx);
 
     thumbBtn.innerHTML = `
-      <div class="thumb-img-wrap">
-        <img src="${escapeHTML(imgObj.url)}" alt="${escapeHTML(imgObj.label)}" loading="lazy" />
+      <div class="thumb-img-wrap is-loading">
+        <img src="${escapeHTML(imgObj.url)}"
+             alt="${escapeHTML(imgObj.label)}"
+             loading="lazy"
+             onload="this.classList.add('is-loaded'); this.closest('.is-loading')?.classList.remove('is-loading');"
+             onerror="this.onerror=null; this.src='${defaultImg}'; this.classList.add('is-loaded', 'is-fallback'); this.closest('.is-loading')?.classList.remove('is-loading');" />
       </div>
       <p class="thumb-label">${escapeHTML(imgObj.label)}</p>
     `;
@@ -368,14 +393,12 @@ function setupGallery(product) {
       thumbStrip.querySelectorAll('.thumb-item').forEach(b => b.classList.remove('active'));
       thumbBtn.classList.add('active');
 
-      mainImg.style.opacity = '0.3';
-      mainImg.style.transform = 'scale(0.98)';
+      if (mainFrame) mainFrame.classList.add('is-loading');
+      mainImg.classList.remove('is-loaded');
 
       setTimeout(() => {
         mainImg.src = imgObj.url;
-        mainImg.style.opacity = '1';
-        mainImg.style.transform = 'scale(1)';
-      }, 150);
+      }, 50);
     });
 
     fragment.appendChild(thumbBtn);
@@ -495,12 +518,17 @@ function renderRelatedProducts(allProducts, currentProduct) {
     const catName = DETAIL_STATE.categoryMap.get(item.Cat_ID)?.Cat_Name || 'Kiệt Tác';
 
     card.innerHTML = `
-      <div class="product-card-media zoom-trigger">
+      <div class="product-card-media zoom-trigger is-loading">
         <div class="product-badge-group">
           ${item.Badge ? `<span class="badge-tag">${escapeHTML(item.Badge)}</span>` : ''}
           <span class="badge-tag badge-secondary">${escapeHTML(item.Wood_Type)}</span>
         </div>
-        <img class="product-card-img zoom-target" src="${escapeHTML(item.Image_Main)}" alt="${escapeHTML(item.Name)}" loading="lazy" />
+        <img class="product-card-img zoom-target"
+             src="${escapeHTML(item.Image_Main)}"
+             alt="${escapeHTML(item.Name)}"
+             loading="lazy"
+             onload="this.classList.add('is-loaded'); this.closest('.is-loading')?.classList.remove('is-loading');"
+             onerror="this.onerror=null; this.src='images/default-woodcraft.svg'; this.classList.add('is-loaded', 'is-fallback'); this.closest('.is-loading')?.classList.remove('is-loading');" />
       </div>
       <div class="product-card-body">
         <span class="product-card-category">${escapeHTML(catName)}</span>
@@ -533,6 +561,21 @@ function renderRelatedProducts(allProducts, currentProduct) {
 
   container.innerHTML = '';
   container.appendChild(fragment);
+
+  // Safety handler for cached images
+  container.querySelectorAll('img').forEach(img => {
+    if (img.complete) {
+      if (img.naturalWidth > 0) {
+        img.classList.add('is-loaded');
+        img.closest('.is-loading')?.classList.remove('is-loading');
+      } else if (img.src) {
+        img.onerror = null;
+        img.src = 'images/default-woodcraft.svg';
+        img.classList.add('is-loaded', 'is-fallback');
+        img.closest('.is-loading')?.classList.remove('is-loading');
+      }
+    }
+  });
 }
 
 function escapeHTML(str) {

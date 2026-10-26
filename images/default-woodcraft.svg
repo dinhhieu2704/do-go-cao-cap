@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550" width="800" height="550">
+  <defs>
+    <!-- Background Gradient (Dark Walnut / Mun Hoa Wood) -->
+    <radialGradient id="bgGrad" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#382116" />
+      <stop offset="55%" stop-color="#24140d" />
+      <stop offset="100%" stop-color="#140a06" />
+    </radialGradient>
+
+    <!-- Gold Accent Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dfc282" />
+      <stop offset="50%" stop-color="#c5a059" />
+      <stop offset="100%" stop-color="#8f6e2e" />
+    </linearGradient>
+
+    <!-- Soft Wood Grain Texture Pattern -->
+    <pattern id="woodGrain" width="200" height="40" patternUnits="userSpaceOnUse" opacity="0.12">
+      <path d="M 0 10 Q 50 15 100 10 T 200 10 M 0 25 Q 60 20 120 28 T 200 25 M 0 38 Q 40 35 110 39 T 200 38" fill="none" stroke="#e0cda9" stroke-width="1.2" />
+    </pattern>
+
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Deep Warm Walnut Background -->
+  <rect width="100%" height="100%" fill="url(#bgGrad)" />
+  <rect width="100%" height="100%" fill="url(#woodGrain)" />
+
+  <!-- Outer Border Corner Embellishments -->
+  <rect x="25" y="25" width="750" height="500" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-opacity="0.45" />
+  <rect x="35" y="35" width="730" height="480" fill="none" stroke="url(#goldGrad)" stroke-width="0.75" stroke-dasharray="8 4" stroke-opacity="0.3" />
+
+  <!-- Corner Corner Accents -->
+  <path d="M 20 45 L 45 45 L 45 20" fill="none" stroke="url(#goldGrad)" stroke-width="2" />
+  <path d="M 780 45 L 755 45 L 755 20" fill="none" stroke="url(#goldGrad)" stroke-width="2" />
+  <path d="M 20 505 L 45 505 L 45 530" fill="none" stroke="url(#goldGrad)" stroke-width="2" />
+  <path d="M 780 505 L 755 505 L 755 530" fill="none" stroke="url(#goldGrad)" stroke-width="2" />
+
+  <!-- Center Emblem (Royal Seal & Heritage Woodcraft Icon) -->
+  <g transform="translate(400, 210)" text-anchor="middle">
+    <!-- Emblem Outer Ring -->
+    <circle r="65" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-opacity="0.6" />
+    <circle r="57" fill="#1e100a" fill-opacity="0.8" stroke="url(#goldGrad)" stroke-width="0.75" stroke-dasharray="4 3" stroke-opacity="0.5" />
+
+    <!-- Stylized Crown / Lotus Heritage Symbol -->
+    <path d="M -28 12 L -34 -15 L -12 -5 L 0 -28 L 12 -5 L 34 -15 L 28 12 Z" fill="url(#goldGrad)" filter="url(#goldGlow)" />
+    <circle cx="0" cy="5" r="4" fill="#ffffff" />
+    <circle cx="-16" cy="7" r="2.5" fill="#dfc282" />
+    <circle cx="16" cy="7" r="2.5" fill="#dfc282" />
+
+    <!-- Brand Typography -->
+    <text y="105" font-family="'Playfair Display', Georgia, serif" font-size="28" font-weight="700" fill="url(#goldGrad)" letter-spacing="4">
+      MỘC GIA TINH HOA
+    </text>
+
+    <!-- Subtitle -->
+    <text y="132" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="12" font-weight="600" fill="#c4aa82" letter-spacing="3" opacity="0.85">
+      KIỆT TÁC GỖ TỰ NHIÊN • ĐỘC BẢN HOÀNG GIA
+    </text>
+
+    <!-- Artisan Divider Line -->
+    <path d="M -120 152 L 120 152" stroke="url(#goldGrad)" stroke-width="1" stroke-opacity="0.4" />
+    <polygon points="0,149 4,152 0,155 -4,152" fill="url(#goldGrad)" />
+
+    <!-- Status Note -->
+    <text y="174" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11" font-weight="500" fill="#9e8467" letter-spacing="1">
+      Hình ảnh đang được cập nhật từ xưởng nghệ nhân
+    </text>
+  </g>
+</svg>

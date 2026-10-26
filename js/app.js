@@ -471,6 +471,26 @@ function renderCurrentPageProducts() {
       openQuickViewModal(pId);
     });
   });
+
+  // Ensure any cached or completed images update their visual state immediately
+  initImageSafety(container);
+}
+
+function initImageSafety(container = document) {
+  const defaultImg = 'images/default-woodcraft.svg';
+  container.querySelectorAll('img').forEach(img => {
+    if (img.complete) {
+      if (img.naturalWidth > 0) {
+        img.classList.add('is-loaded');
+        img.closest('.is-loading')?.classList.remove('is-loading');
+      } else if (img.src) {
+        img.onerror = null;
+        img.src = defaultImg;
+        img.classList.add('is-loaded', 'is-fallback');
+        img.closest('.is-loading')?.classList.remove('is-loading');
+      }
+    }
+  });
 }
 
 function createProductCard(item) {
@@ -481,12 +501,18 @@ function createProductCard(item) {
   const detailUrl = `product-detail.html?id=${encodeURIComponent(item.Product_ID)}`;
 
   card.innerHTML = `
-    <div class="product-card-media zoom-trigger">
+    <div class="product-card-media zoom-trigger is-loading">
       <div class="product-badge-group">
         ${item.Badge ? `<span class="badge-tag">${escapeHTML(item.Badge)}</span>` : ''}
         <span class="badge-tag badge-secondary">${escapeHTML(item.Wood_Type || 'Gỗ Quý')}</span>
       </div>
-      <img class="product-card-img zoom-target" src="${escapeHTML(item.Image_Main)}" alt="${escapeHTML(item.Name)}" loading="lazy" draggable="false" />
+      <img class="product-card-img zoom-target"
+           src="${escapeHTML(item.Image_Main)}"
+           alt="${escapeHTML(item.Name)}"
+           loading="lazy"
+           draggable="false"
+           onload="this.classList.add('is-loaded'); this.closest('.is-loading')?.classList.remove('is-loading');"
+           onerror="this.onerror=null; this.src='images/default-woodcraft.svg'; this.classList.add('is-loaded', 'is-fallback'); this.closest('.is-loading')?.classList.remove('is-loading');" />
       <div class="card-quick-overlay">
         <button type="button" class="btn-card-quickview" data-quickview-id="${escapeHTML(item.Product_ID)}">
           <span class="material-symbols-outlined" style="font-size: 16px;">visibility</span>
@@ -884,8 +910,12 @@ function openQuickViewModal(productId) {
 
   modalContent.innerHTML = `
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem;">
-      <div style="aspect-ratio: 4/3; overflow: hidden; background: var(--color-surface-container); border: 1px solid var(--color-border);">
-        <img src="${escapeHTML(item.Image_Main)}" alt="${escapeHTML(item.Name)}" style="width: 100%; height: 100%; object-fit: cover;" />
+      <div class="quickview-media is-loading" style="aspect-ratio: 4/3; overflow: hidden; background: #24140d; border: 1px solid var(--color-border); position: relative;">
+        <img src="${escapeHTML(item.Image_Main)}"
+             alt="${escapeHTML(item.Name)}"
+             style="width: 100%; height: 100%; object-fit: cover;"
+             onload="this.classList.add('is-loaded'); this.closest('.is-loading')?.classList.remove('is-loading');"
+             onerror="this.onerror=null; this.src='images/default-woodcraft.svg'; this.classList.add('is-loaded', 'is-fallback'); this.closest('.is-loading')?.classList.remove('is-loading');" />
       </div>
       <div style="display: flex; flex-direction: column; justify-content: space-between;">
         <div>
