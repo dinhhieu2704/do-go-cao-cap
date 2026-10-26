@@ -367,6 +367,24 @@ function applyDynamicSettings(settings) {
   }
 }
 
+function handleCategorySelect(catId) {
+  if (!catId) return;
+  STATE.activeCategory = catId;
+
+  const container = document.getElementById('category-filter-tabs');
+  if (container) {
+    container.querySelectorAll('.filter-btn').forEach(b => {
+      if (b.getAttribute('data-cat-id') === catId) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
+  }
+
+  filterProductsByCategory(catId);
+}
+
 function renderCategoryFilters(categories) {
   const container = document.getElementById('category-filter-tabs');
   if (!container) return;
@@ -378,6 +396,7 @@ function renderCategoryFilters(categories) {
     btn.type = 'button';
     btn.className = `filter-btn ${cat.Cat_ID === STATE.activeCategory ? 'active' : ''}`;
     btn.setAttribute('data-cat-id', cat.Cat_ID);
+    btn.setAttribute('aria-label', `Xem danh mục ${cat.Cat_Name}`);
 
     const iconSpan = document.createElement('span');
     iconSpan.className = 'material-symbols-outlined';
@@ -389,15 +408,12 @@ function renderCategoryFilters(categories) {
     btn.appendChild(iconSpan);
     btn.appendChild(textSpan);
 
-    btn.addEventListener('click', () => {
-      container.querySelectorAll('.filter-btn').forEach(b => {
-        if (b.getAttribute('data-cat-id') === cat.Cat_ID) {
-          b.classList.add('active');
-        } else {
-          b.classList.remove('active');
-        }
-      });
-      filterProductsByCategory(cat.Cat_ID);
+    btn.addEventListener('click', (e) => {
+      if (Date.now() - lastDragEndTime < 150) {
+        e.preventDefault();
+        return;
+      }
+      handleCategorySelect(cat.Cat_ID);
     });
 
     return btn;
@@ -417,16 +433,40 @@ function renderCategoryFilters(categories) {
 
   container.innerHTML = '';
   container.appendChild(fragment);
+
+  // Delegation fallback
+  container.onclick = (e) => {
+    if (Date.now() - lastDragEndTime < 150) return;
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    const catId = btn.getAttribute('data-cat-id');
+    if (catId) handleCategorySelect(catId);
+  };
 }
 
 function filterProductsByCategory(catId) {
   STATE.activeCategory = catId;
   STATE.currentPage = 1; // Reset to page 1 on filter change
 
-  if (catId === 'all') {
+  if (!catId || catId === 'all') {
     STATE.filteredProducts = [...STATE.products];
   } else {
-    STATE.filteredProducts = STATE.products.filter(p => p.Cat_ID === catId);
+    const targetCat = catId.trim().toUpperCase();
+    STATE.filteredProducts = STATE.products.filter(p => {
+      const pCat = (p.Cat_ID || '').trim().toUpperCase();
+      return pCat === targetCat;
+    });
+  }
+
+  // Update Section Tag & Header for instant visual feedback
+  const sectionTag = document.getElementById('showcase-section-tag');
+  const catObj = STATE.categoryMap.get(catId);
+  if (sectionTag) {
+    if (!catId || catId === 'all') {
+      sectionTag.textContent = 'Kiệt Tác Độc Bản 2025 • Tất Cả Bộ Sưu Tập';
+    } else if (catObj) {
+      sectionTag.textContent = `Danh Mục: ${catObj.Cat_Name} (${STATE.filteredProducts.length} kiệt tác)`;
+    }
   }
 
   renderCurrentPageProducts();
@@ -641,6 +681,7 @@ function goToPage(pageNumber) {
 
 let categoryCarouselInitialized = false;
 let categoryAnimId = null;
+let lastDragEndTime = 0;
 
 function initCategoryCarousel() {
   const carousel = document.getElementById('category-carousel');
@@ -692,7 +733,6 @@ function initCategoryCarousel() {
     hasDragged = false;
     startX = e.pageX - carousel.offsetLeft;
     scrollStart = carousel.scrollLeft;
-    carousel.classList.add('is-dragging');
   });
 
   window.addEventListener('mousemove', e => {
@@ -700,41 +740,37 @@ function initCategoryCarousel() {
     const currentX = e.pageX - carousel.offsetLeft;
     const distance = currentX - startX;
 
-    if (Math.abs(distance) > 5) {
+    if (Math.abs(distance) > 10) {
       hasDragged = true;
+      carousel.classList.add('is-dragging');
     }
 
-    carousel.scrollLeft = scrollStart - distance;
+    if (hasDragged) {
+      carousel.scrollLeft = scrollStart - distance;
 
-    const half = carousel.scrollWidth / 2;
-    if (half > 0) {
-      if (carousel.scrollLeft >= half) {
-        carousel.scrollLeft -= half;
-        scrollStart -= half;
-      } else if (carousel.scrollLeft <= 0) {
-        carousel.scrollLeft += half;
-        scrollStart += half;
+      const half = carousel.scrollWidth / 2;
+      if (half > 0) {
+        if (carousel.scrollLeft >= half) {
+          carousel.scrollLeft -= half;
+          scrollStart -= half;
+        } else if (carousel.scrollLeft <= 0) {
+          carousel.scrollLeft += half;
+          scrollStart += half;
+        }
       }
     }
   });
 
   window.addEventListener('mouseup', () => {
     if (isPointerDown) {
+      if (hasDragged) {
+        lastDragEndTime = Date.now();
+      }
       isPointerDown = false;
       carousel.classList.remove('is-dragging');
-      setTimeout(() => {
-        hasDragged = false;
-      }, 50);
+      hasDragged = false;
     }
   });
-
-  // Prevent click navigation on drag
-  carousel.addEventListener('click', e => {
-    if (hasDragged) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  }, true);
 
   // Touch Drag for Mobile / Tablet
   carousel.addEventListener('touchstart', e => {
@@ -749,29 +785,34 @@ function initCategoryCarousel() {
     if (!isPointerDown) return;
     const currentX = e.touches[0].pageX - carousel.offsetLeft;
     const distance = currentX - startX;
-    if (Math.abs(distance) > 5) {
+    if (Math.abs(distance) > 10) {
       hasDragged = true;
+      carousel.classList.add('is-dragging');
     }
-    carousel.scrollLeft = scrollStart - distance;
+    if (hasDragged) {
+      carousel.scrollLeft = scrollStart - distance;
 
-    const half = carousel.scrollWidth / 2;
-    if (half > 0) {
-      if (carousel.scrollLeft >= half) {
-        carousel.scrollLeft -= half;
-        scrollStart -= half;
-      } else if (carousel.scrollLeft <= 0) {
-        carousel.scrollLeft += half;
-        scrollStart += half;
+      const half = carousel.scrollWidth / 2;
+      if (half > 0) {
+        if (carousel.scrollLeft >= half) {
+          carousel.scrollLeft -= half;
+          scrollStart -= half;
+        } else if (carousel.scrollLeft <= 0) {
+          carousel.scrollLeft += half;
+          scrollStart += half;
+        }
       }
     }
   }, { passive: true });
 
   carousel.addEventListener('touchend', () => {
+    if (hasDragged) {
+      lastDragEndTime = Date.now();
+    }
     isHovered = false;
     isPointerDown = false;
-    setTimeout(() => {
-      hasDragged = false;
-    }, 50);
+    carousel.classList.remove('is-dragging');
+    hasDragged = false;
   }, { passive: true });
 
   // Navigation Buttons
