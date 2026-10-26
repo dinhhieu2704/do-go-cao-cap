@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mộc Gia Tinh Hoa — Trang Quản Trị Hệ Thống (Google Sheets DB)</title>
+  
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/admin.css">
+
+  <!-- Google Identity Services (GIS) & Google API Client (gapi) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js" async defer></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. LOGIN SCREEN (AUTHENTICATION OVERLAY - SHOWN WHEN NOT LOGGED IN)
+       ======================================================================== -->
+  <div class="login-wrapper" id="login-screen">
+    <div class="login-card">
+      <div class="login-emblem">
+        <span class="material-symbols-outlined" style="font-size: 30px;">admin_panel_settings</span>
+      </div>
+      <h1 class="login-title">Mộc Gia Tinh Hoa</h1>
+      <p class="login-subtitle">Hệ Thống Quản Trị Kiệt Tác Gỗ</p>
+      
+      <p class="login-desc">
+        Đăng nhập bằng tài khoản Google có quyền chỉnh sửa bảng tính cơ sở dữ liệu để truy cập trung tâm điều hành.
+      </p>
+
+      <!-- Standard Google Sign-In Button -->
+      <button type="button" class="btn-google-signin" id="btn-google-login">
+        <svg viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        <span>Đăng nhập với Google</span>
+      </button>
+
+      <!-- Advanced Config (Spreadsheet ID & OAuth Client ID) -->
+      <div class="login-config-toggle">
+        <button type="button" class="btn-text-toggle" id="btn-toggle-config">
+          <span class="material-symbols-outlined" style="font-size: 16px;">tune</span>
+          <span>Thiết lập Google Sheet ID & Client ID</span>
+        </button>
+        
+        <div class="login-config-panel" id="login-config-panel">
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label class="form-label" for="cfg-sheet-id">Google Spreadsheet ID:</label>
+            <input type="text" id="cfg-sheet-id" class="form-control" value="1fvhKI-B-HP02--JdDvRy9QevfgyPo6Ekko34X-8ToKA">
+          </div>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label class="form-label" for="cfg-client-id">Google OAuth 2.0 Client ID:</label>
+            <input type="text" id="cfg-client-id" class="form-control" placeholder="YOUR_CLIENT_ID.apps.googleusercontent.com">
+            <span style="font-size: 0.6875rem; color: var(--color-text-subtle);">
+              Tạo tại Google Cloud Console (OAuth 2.0 Client ID loại Web Application).
+            </span>
+          </div>
+          <button type="button" class="btn-primary-action" id="btn-save-config" style="width: 100%; justify-content: center;">
+            Lưu Thiết Lập
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. DASHBOARD MAIN SCREEN (SHOWN AFTER SUCCESSFUL LOGIN)
+       ======================================================================== -->
+  <div class="admin-layout" id="dashboard-screen" style="display: none;">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div>
+        <div class="sidebar-header">
+          <div class="sidebar-emblem">MG</div>
+          <div>
+            <div class="sidebar-brand-name">Mộc Gia Tinh Hoa</div>
+            <div class="sidebar-brand-tag">Quản Trị Cơ Sở Dữ Liệu</div>
+          </div>
+        </div>
+
+        <!-- Sidebar Navigation Menu -->
+        <nav class="sidebar-nav">
+          <button type="button" class="nav-item-btn active" data-view="products">
+            <span class="material-symbols-outlined">inventory_2</span>
+            <span>Sản Phẩm</span>
+          </button>
+          <button type="button" class="nav-item-btn" data-view="categories">
+            <span class="material-symbols-outlined">category</span>
+            <span>Danh Mục</span>
+          </button>
+          <button type="button" class="nav-item-btn" data-view="settings">
+            <span class="material-symbols-outlined">tune</span>
+            <span>Cấu Hình</span>
+          </button>
+          <a href="index.html" class="nav-item-btn" style="text-decoration: none;" title="Xem website cửa hàng">
+            <span class="material-symbols-outlined">open_in_new</span>
+            <span>Xem Website</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Sidebar Footer (Database Status & Logout) -->
+      <div class="sidebar-footer">
+        <div class="sidebar-db-widget">
+          <div class="db-status-header">
+            <span class="db-status-tag">
+              <span class="pulse-dot"></span>
+              <span>Sheets Live DB</span>
+            </span>
+            <span class="material-symbols-outlined" style="font-size: 16px; color: var(--color-success);">verified</span>
+          </div>
+          <div style="font-size: 0.6875rem; color: var(--color-text-muted); word-break: break-all;" id="sidebar-db-info">
+            ID: 1fvhKI-B...8ToKA
+          </div>
+        </div>
+
+        <button type="button" class="btn-sidebar-logout" id="btn-logout">
+          <span class="material-symbols-outlined" style="font-size: 18px;">logout</span>
+          <span>Đăng xuất</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="admin-main">
+      <!-- TOP HEADER -->
+      <header class="admin-header">
+        <div style="display: flex; align-items: center;">
+          <button type="button" class="mobile-sidebar-toggle" id="btn-mobile-sidebar" aria-label="Menu">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+          <nav class="header-breadcrumbs" aria-label="Breadcrumb">
+            <span>QUẢN TRỊ</span>
+            <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+            <span class="current-view" id="breadcrumb-active-view">SẢN PHẨM</span>
+          </nav>
+        </div>
+
+        <div class="header-user-hub">
+          <div class="sheets-badge" title="Đã kết nối Google Sheets API v4">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/>
+            </svg>
+            <span>Connected</span>
+          </div>
+
+          <div class="user-profile-pill">
+            <div class="user-avatar" id="header-user-avatar">AD</div>
+            <div class="user-info">
+              <span class="user-name" id="header-user-name">Quản Trị Viên</span>
+              <span class="user-email" id="header-user-email">admin@mocgiatinhhoa.vn</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <div class="admin-body">
+        
+        <!-- STATS OVERVIEW CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div>
+              <div class="stat-num" id="stat-products-count">0</div>
+              <div class="stat-label">Tổng Kiệt Tác Gỗ</div>
+            </div>
+            <div class="stat-icon">
+              <span class="material-symbols-outlined">inventory_2</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-num" id="stat-categories-count">0</div>
+              <div class="stat-label">Danh Mục Kiệt Tác</div>
+            </div>
+            <div class="stat-icon">
+              <span class="material-symbols-outlined">category</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-num" id="stat-settings-count">0</div>
+              <div class="stat-label">Cấu Hình Thương Hiệu</div>
+            </div>
+            <div class="stat-icon">
+              <span class="material-symbols-outlined">tune</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION TOOLBAR -->
+        <div class="table-toolbar">
+          <div class="toolbar-title-group">
+            <h2 id="toolbar-view-title">Quản Lý Sản Phẩm</h2>
+            <p id="toolbar-view-desc">Quản lý và cập nhật dữ liệu trực tiếp lên trang tính Products</p>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="search-input-wrap">
+              <span class="material-symbols-outlined">search</span>
+              <input type="text" id="table-search-input" placeholder="Tìm kiếm nhanh..." aria-label="Tìm kiếm trong bảng">
+            </div>
+
+            <button type="button" class="btn-reload-action" id="btn-reload-table" title="Tải lại từ Google Sheets">
+              <span class="material-symbols-outlined" style="font-size: 16px;">refresh</span>
+              <span>Làm Mới</span>
+            </button>
+
+            <button type="button" class="btn-primary-action" id="btn-open-create">
+              <span class="material-symbols-outlined" style="font-size: 16px;">add</span>
+              <span id="btn-create-label">+ Thêm Mới</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- DATA TABLE -->
+        <div class="data-table-card">
+          <table class="data-table" id="crud-data-table">
+            <thead id="data-table-head">
+              <!-- Dynamically populated according to active view -->
+            </thead>
+            <tbody id="data-table-body">
+              <!-- Populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       3. POPUP MODAL FORM FOR CREATE & UPDATE
+       ======================================================================== -->
+  <div class="admin-modal-backdrop" id="crud-modal">
+    <div class="admin-modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-form-title">Thêm Sản Phẩm Mới</h3>
+        <button type="button" class="modal-close-btn" id="btn-close-modal" aria-label="Đóng">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="crud-form">
+        <div class="modal-body" id="modal-form-fields">
+          <!-- Dynamically generated according to active sheet -->
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="btn-cancel-modal">Hủy</button>
+          <button type="submit" class="btn-modal-save" id="btn-submit-form">Lưu Dữ Liệu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       4. DELETE CONFIRMATION POPUP MODAL
+       ======================================================================== -->
+  <div class="admin-modal-backdrop" id="confirm-modal">
+    <div class="admin-modal-window confirm-modal-window">
+      <div class="modal-body" style="padding-top: 2rem;">
+        <span class="material-symbols-outlined confirm-icon">delete_forever</span>
+        <h3 class="modal-title" style="margin-bottom: 0.5rem;">Xác Nhận Xóa Dữ Liệu?</h3>
+        <p style="font-size: 0.8125rem; color: var(--color-text-muted);" id="confirm-delete-msg">
+          Hành động này sẽ xóa dòng tương ứng trên Google Sheets. Bạn có chắc chắn muốn xóa?
+        </p>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn-modal-cancel" id="btn-cancel-delete">Hủy Bỏ</button>
+        <button type="button" class="btn-confirm-delete" id="btn-confirm-delete">Xác Nhận Xóa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       5. TOAST / SNACKBAR NOTIFICATIONS
+       ======================================================================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ========================================================================
+       6. GLOBAL LOADING SPINNER OVERLAY
+       ======================================================================== -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner-ring"></div>
+    <div class="loading-text" id="loading-text">Đang đồng bộ Google Sheets...</div>
+  </div>
+
+  <!-- Main Admin Controller -->
+  <script src="js/admin.js"></script>
+</body>
+</html>
